@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import DestinationCard from '@/components/DestinationCard';
-import { getDestinations, Destination } from '@/services/api'; // Import API service and type
+import React, { useEffect, useState } from "react";
+import DestinationCard from "@/components/DestinationCard";
+import { getDestinations } from "@/services/api"; // Import API service and type
+import type { Destination } from "@/services/api";
 
 const DestinationsPage: React.FC = () => {
   const [destinations, setDestinations] = useState<Destination[]>([]);
@@ -15,7 +16,7 @@ const DestinationsPage: React.FC = () => {
         setDestinations(data);
         setError(null);
       } catch (err) {
-        setError('Failed to fetch destinations. Please try again later.');
+        setError("Failed to fetch destinations. Please try again later.");
         console.error(err); // Log the actual error for debugging
       } finally {
         setIsLoading(false);
@@ -34,19 +35,26 @@ const DestinationsPage: React.FC = () => {
   }
 
   if (destinations.length === 0) {
-    return <div className="text-center py-10">No destinations available at the moment.</div>;
+    return (
+      <div className="text-center py-10">
+        No destinations available at the moment.
+      </div>
+    );
   }
 
   return (
     <div>
       <h1 className="text-3xl font-bold mb-8 text-center">Our Destinations</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {destinations.map(dest => (
+        {destinations.map((dest) => (
           <DestinationCard
             key={dest._id} // Use _id from MongoDB
             title={dest.name}
             description={dest.description}
-            imageUrl={dest.imageUrl || 'https://via.placeholder.com/300x200?text=No+Image'} // Provide a fallback
+            imageUrl={
+              dest.imageUrl ||
+              "https://via.placeholder.com/300x200?text=No+Image"
+            } // Provide a fallback
             // Pass price or other props if your card supports them
           />
         ))}

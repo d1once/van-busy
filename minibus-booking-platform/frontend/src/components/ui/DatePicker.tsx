@@ -1,17 +1,16 @@
-"use client" // Required by react-day-picker for certain hooks if you were in Next.js App Router
+"use client"; // Required by react-day-picker for certain hooks if you were in Next.js App Router
 
-import * as React from "react"
-import { format } from "date-fns"
-import { Calendar as CalendarIcon } from "lucide-react" // lucide-react should be installed
+import { format } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react"; // lucide-react should be installed
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Calendar, CalendarProps } from "@/components/ui/calendar"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 
 interface DatePickerProps {
   date: Date | undefined;
@@ -20,7 +19,12 @@ interface DatePickerProps {
   disabled?: (date: Date) => boolean; // To disable past dates, for example
 }
 
-export function DatePicker({ date, setDate, className, disabled }: DatePickerProps) {
+export function DatePicker({
+  date,
+  setDate,
+  className,
+  disabled,
+}: DatePickerProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -46,5 +50,5 @@ export function DatePicker({ date, setDate, className, disabled }: DatePickerPro
         />
       </PopoverContent>
     </Popover>
-  )
+  );
 }
