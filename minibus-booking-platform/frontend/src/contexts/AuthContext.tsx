@@ -1,14 +1,14 @@
 // minibus-booking-platform/frontend/src/contexts/AuthContext.tsx
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { 
+import React, { createContext, useState, useEffect } from "react";
+import type { ReactNode } from "react";
+import {
   login as apiLogin, // Renamed from apiLoginAdmin
   logout as apiLogout, // Renamed from apiLogoutAdmin
-  getCurrentUser, 
+  getCurrentUser,
   getAuthToken, // Renamed from getAdminToken
-  AdminUser, 
-  AuthResponse 
-} from '../services/authService';
-import { apiClient } from '../services/api'; // To update apiClient headers
+} from "../services/authService";
+import type { AdminUser, AuthResponse } from "../services/authService";
+import { apiClient } from "../services/api"; // To update apiClient headers
 
 interface AuthContextType {
   user: AdminUser | null;
@@ -20,7 +20,12 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export type { AuthContextType };
+export { AuthContext };
+
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<AdminUser | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true); // Start with loading true
@@ -35,11 +40,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (currentUser && token) {
         setUser(currentUser);
         setIsAuthenticated(true);
-        apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        apiClient.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       } else {
         setUser(null);
         setIsAuthenticated(false);
-        delete apiClient.defaults.headers.common['Authorization'];
+        delete apiClient.defaults.headers.common["Authorization"];
       }
       setIsLoading(false);
     };
@@ -54,15 +59,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setIsAuthenticated(true);
         // authService.login already sets token in localStorage and apiClient
       } else {
-        throw new Error('Login response missing user or token.');
+        throw new Error("Login response missing user or token.");
       }
     } catch (error) {
-      console.error('Login failed in AuthContext:', error);
+      console.error("Login failed in AuthContext:", error);
       // Ensure state is reset on failed login
       setUser(null);
       setIsAuthenticated(false);
-      delete apiClient.defaults.headers.common['Authorization']; // Ensure header is cleared
-      throw error; 
+      delete apiClient.defaults.headers.common["Authorization"]; // Ensure header is cleared
+      throw error;
     }
   };
 
@@ -73,16 +78,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, isLoading, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, isAuthenticated, isLoading, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 };

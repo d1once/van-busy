@@ -1,7 +1,7 @@
 // minibus-booking-platform/frontend/src/components/auth/UserProtectedRoute.tsx
-import React from 'react';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext'; // Adjust path if necessary
+import React from "react";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { useAuth } from "../../contexts/useAuth"; // Adjust path if necessary
 
 const UserProtectedRoute: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -9,7 +9,7 @@ const UserProtectedRoute: React.FC = () => {
 
   if (isLoading) {
     // Show a loading spinner or a blank page while auth state is being determined
-    return <div>Loading authentication status...</div>; 
+    return <div>Loading authentication status...</div>;
   }
 
   if (!isAuthenticated) {
@@ -19,7 +19,7 @@ const UserProtectedRoute: React.FC = () => {
   }
 
   // User is authenticated, render the requested content
-  return <Outlet />; 
+  return <Outlet />;
 };
 
 export default UserProtectedRoute;

@@ -1,14 +1,18 @@
 // minibus-booking-platform/frontend/src/components/admin/MinibusFormModal.tsx
-import React, { useState, useEffect, FormEvent } from 'react';
-import { MinibusData, MinibusUpdateData } from '../../services/minibusService'; // Minibus type from service
-import './MinibusFormModal.css';
+import React, { useState, useEffect } from "react";
+import type { FormEvent } from "react";
+import type {
+  MinibusData,
+  MinibusUpdateData,
+} from "../../services/minibusService";
+import "./MinibusFormModal.css";
 
 interface Minibus {
   _id: string;
   name: string;
   capacity: number;
   licensePlate: string;
-  status: 'active' | 'maintenance' | 'out of service';
+  status: "active" | "maintenance" | "out of service";
   features?: string[];
   imageUrl?: string;
 }
@@ -30,12 +34,14 @@ const MinibusFormModal: React.FC<MinibusFormModalProps> = ({
   isLoading,
   error: submissionError,
 }) => {
-  const [name, setName] = useState('');
-  const [capacity, setCapacity] = useState<number | ''>('');
-  const [licensePlate, setLicensePlate] = useState('');
-  const [status, setStatus] = useState<'active' | 'maintenance' | 'out of service'>('active');
-  const [features, setFeatures] = useState(''); // Comma-separated string
-  const [imageUrl, setImageUrl] = useState('');
+  const [name, setName] = useState("");
+  const [capacity, setCapacity] = useState<number | "">("");
+  const [licensePlate, setLicensePlate] = useState("");
+  const [status, setStatus] = useState<
+    "active" | "maintenance" | "out of service"
+  >("active");
+  const [features, setFeatures] = useState(""); // Comma-separated string
+  const [imageUrl, setImageUrl] = useState("");
   const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -44,16 +50,16 @@ const MinibusFormModal: React.FC<MinibusFormModalProps> = ({
       setCapacity(minibusToEdit.capacity);
       setLicensePlate(minibusToEdit.licensePlate);
       setStatus(minibusToEdit.status);
-      setFeatures(minibusToEdit.features?.join(', ') || '');
-      setImageUrl(minibusToEdit.imageUrl || '');
+      setFeatures(minibusToEdit.features?.join(", ") || "");
+      setImageUrl(minibusToEdit.imageUrl || "");
     } else {
       // Reset form for "Add New"
-      setName('');
-      setCapacity('');
-      setLicensePlate('');
-      setStatus('active');
-      setFeatures('');
-      setImageUrl('');
+      setName("");
+      setCapacity("");
+      setLicensePlate("");
+      setStatus("active");
+      setFeatures("");
+      setImageUrl("");
     }
     setFormError(null); // Clear previous form errors when minibusToEdit changes or modal opens
   }, [isOpen, minibusToEdit]);
@@ -62,12 +68,12 @@ const MinibusFormModal: React.FC<MinibusFormModalProps> = ({
     e.preventDefault();
     setFormError(null); // Clear previous errors
 
-    if (!name || capacity === '' || !licensePlate) {
-      setFormError('Name, Capacity, and License Plate are required.');
+    if (!name || capacity === "" || !licensePlate) {
+      setFormError("Name, Capacity, and License Plate are required.");
       return;
     }
     if (capacity <= 0) {
-      setFormError('Capacity must be a positive number.');
+      setFormError("Capacity must be a positive number.");
       return;
     }
 
@@ -76,10 +82,13 @@ const MinibusFormModal: React.FC<MinibusFormModalProps> = ({
       capacity: Number(capacity),
       licensePlate,
       status,
-      features: features.split(',').map(f => f.trim()).filter(f => f), // Handle empty strings from split
+      features: features
+        .split(",")
+        .map((f) => f.trim())
+        .filter((f) => f), // Handle empty strings from split
       imageUrl: imageUrl || undefined, // Send undefined if empty to potentially clear it
     };
-    
+
     onSubmit(minibusData);
   };
 
@@ -88,9 +97,11 @@ const MinibusFormModal: React.FC<MinibusFormModalProps> = ({
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h2>{minibusToEdit ? 'Edit Minibus' : 'Add New Minibus'}</h2>
+        <h2>{minibusToEdit ? "Edit Minibus" : "Add New Minibus"}</h2>
         {formError && <p className="error-message form-error">{formError}</p>}
-        {submissionError && <p className="error-message submission-error">{submissionError}</p>}
+        {submissionError && (
+          <p className="error-message submission-error">{submissionError}</p>
+        )}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="name">Name:</label>
@@ -118,14 +129,21 @@ const MinibusFormModal: React.FC<MinibusFormModalProps> = ({
               type="number"
               id="capacity"
               value={capacity}
-              onChange={(e) => setCapacity(e.target.value === '' ? '' : Number(e.target.value))}
+              onChange={(e) =>
+                setCapacity(e.target.value === "" ? "" : Number(e.target.value))
+              }
               required
               min="1"
             />
           </div>
           <div className="form-group">
             <label htmlFor="status">Status:</label>
-            <select id="status" value={status} onChange={(e) => setStatus(e.target.value as any)} required>
+            <select
+              id="status"
+              value={status}
+              onChange={(e) => setStatus(e.target.value as any)}
+              required
+            >
               <option value="active">Active</option>
               <option value="maintenance">Maintenance</option>
               <option value="out of service">Out of Service</option>
@@ -150,10 +168,25 @@ const MinibusFormModal: React.FC<MinibusFormModalProps> = ({
             />
           </div>
           <div className="form-actions">
-            <button type="submit" className="submit-button" disabled={isLoading}>
-              {isLoading ? (minibusToEdit ? 'Saving...' : 'Adding...') : (minibusToEdit ? 'Save Changes' : 'Add Minibus')}
+            <button
+              type="submit"
+              className="submit-button"
+              disabled={isLoading}
+            >
+              {isLoading
+                ? minibusToEdit
+                  ? "Saving..."
+                  : "Adding..."
+                : minibusToEdit
+                ? "Save Changes"
+                : "Add Minibus"}
             </button>
-            <button type="button" className="cancel-button" onClick={onClose} disabled={isLoading}>
+            <button
+              type="button"
+              className="cancel-button"
+              onClick={onClose}
+              disabled={isLoading}
+            >
               Cancel
             </button>
           </div>

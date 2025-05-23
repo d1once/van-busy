@@ -1,11 +1,11 @@
 // minibus-booking-platform/frontend/src/pages/admin/BookingManagementPage.tsx
-import React, { useEffect, useState, useCallback } from 'react';
-import { 
-  getAllBookingsAdmin, 
-  cancelBookingAdmin, 
-  Booking 
-} from '../../services/bookingService';
-import './BookingManagementPage.css'; // We'll create this CSS file
+import React, { useEffect, useState, useCallback } from "react";
+import {
+  getAllBookingsAdmin,
+  cancelBookingAdmin,
+} from "../../services/bookingService";
+import type { Booking } from "../../services/bookingService";
+import "./BookingManagementPage.css"; // We'll create this CSS file
 
 const BookingManagementPage: React.FC = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -21,7 +21,7 @@ const BookingManagementPage: React.FC = () => {
       setError(null);
     } catch (err) {
       console.error("Error in fetchBookings:", err);
-      setError(err instanceof Error ? err.message : 'Failed to fetch bookings');
+      setError(err instanceof Error ? err.message : "Failed to fetch bookings");
     } finally {
       setIsLoading(false);
     }
@@ -32,31 +32,35 @@ const BookingManagementPage: React.FC = () => {
   }, [fetchBookings]);
 
   const handleCancelBooking = async (bookingId: string) => {
-    if (window.confirm('Are you sure you want to cancel this booking?')) {
+    if (window.confirm("Are you sure you want to cancel this booking?")) {
       setIsCancelling(bookingId);
       setError(null); // Clear previous errors
       try {
         await cancelBookingAdmin(bookingId);
         // Refresh the list or update the specific booking's status locally
-        setBookings(prevBookings => 
-          prevBookings.map(b => 
-            b._id === bookingId ? { ...b, status: 'cancelled' } : b
+        setBookings((prevBookings) =>
+          prevBookings.map((b) =>
+            b._id === bookingId ? { ...b, status: "cancelled" } : b
           )
         );
         // alert('Booking cancelled successfully'); // Or use a more sophisticated notification
       } catch (err) {
         console.error(`Error cancelling booking ${bookingId}:`, err);
-        setError(err instanceof Error ? err.message : 'Failed to cancel booking.');
+        setError(
+          err instanceof Error ? err.message : "Failed to cancel booking."
+        );
         // alert(`Error: ${err instanceof Error ? err.message : 'Failed to cancel booking.'}`);
       } finally {
         setIsCancelling(null);
       }
     }
   };
-  
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString(undefined, {
-      year: 'numeric', month: 'long', day: 'numeric',
+      year: "numeric",
+      month: "long",
+      day: "numeric",
       // hour: '2-digit', minute: '2-digit' // Uncomment if time is relevant
     });
   };
@@ -70,7 +74,7 @@ const BookingManagementPage: React.FC = () => {
 
       {isLoading && <p>Loading bookings...</p>}
       {error && <p className="error-message page-error">{error}</p>}
-      
+
       {!isLoading && !error && bookings.length === 0 && (
         <p>No bookings found.</p>
       )}
@@ -90,30 +94,50 @@ const BookingManagementPage: React.FC = () => {
           </thead>
           <tbody>
             {bookings.map((booking) => {
-              const user = typeof booking.user === 'object' ? booking.user : null;
-              const minibus = typeof booking.minibus === 'object' ? booking.minibus : null;
-              const destination = typeof booking.destination === 'object' ? booking.destination : null;
+              const user =
+                typeof booking.user === "object" ? booking.user : null;
+              const minibus =
+                typeof booking.minibus === "object" ? booking.minibus : null;
+              const destination =
+                typeof booking.destination === "object"
+                  ? booking.destination
+                  : null;
 
               return (
                 <tr key={booking._id}>
-                  <td>{user ? user.username : 'N/A'} <br/> <small>{user ? user.email : ''}</small></td>
-                  <td>{minibus ? minibus.name : 'N/A'} <br/> <small>{minibus ? minibus.licensePlate : ''}</small></td>
-                  <td>{destination ? destination.name : 'N/A'}</td>
-                  <td>{formatDate(booking.bookingDate)}</td>
-                  <td>${destination && destination.price ? destination.price.toFixed(2) : 'N/A'}</td>
                   <td>
-                    <span className={`status-badge status-${booking.status.toLowerCase()}`}>
+                    {user ? user.username : "N/A"} <br />{" "}
+                    <small>{user ? user.email : ""}</small>
+                  </td>
+                  <td>
+                    {minibus ? minibus.name : "N/A"} <br />{" "}
+                    <small>{minibus ? minibus.licensePlate : ""}</small>
+                  </td>
+                  <td>{destination ? destination.name : "N/A"}</td>
+                  <td>{formatDate(booking.bookingDate)}</td>
+                  <td>
+                    $
+                    {destination && destination.price
+                      ? destination.price.toFixed(2)
+                      : "N/A"}
+                  </td>
+                  <td>
+                    <span
+                      className={`status-badge status-${booking.status.toLowerCase()}`}
+                    >
                       {booking.status}
                     </span>
                   </td>
                   <td>
-                    {booking.status !== 'cancelled' && (
-                      <button 
-                        className="action-button cancel-button" 
+                    {booking.status !== "cancelled" && (
+                      <button
+                        className="action-button cancel-button"
                         onClick={() => handleCancelBooking(booking._id)}
                         disabled={isCancelling === booking._id}
                       >
-                        {isCancelling === booking._id ? 'Cancelling...' : 'Cancel Booking'}
+                        {isCancelling === booking._id
+                          ? "Cancelling..."
+                          : "Cancel Booking"}
                       </button>
                     )}
                   </td>

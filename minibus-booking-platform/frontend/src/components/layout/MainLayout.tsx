@@ -1,7 +1,7 @@
-import React from 'react';
-import { Outlet, Link, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { useAuth } from '../../contexts/AuthContext'; // Import useAuth
+import React from "react";
+import { Outlet, Link, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "../../contexts/useAuth"; // Import useAuth
 
 const Navbar: React.FC = () => {
   const { isAuthenticated, user, logout } = useAuth();
@@ -9,7 +9,7 @@ const Navbar: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/'); // Redirect to homepage after logout
+    navigate("/"); // Redirect to homepage after logout
   };
 
   return (
@@ -25,22 +25,22 @@ const Navbar: React.FC = () => {
             </Button>
             {/* Public destinations link still makes sense */}
             <Button variant="ghost" asChild>
-              <Link to="/destinations">Destinations</Link> 
+              <Link to="/destinations">Destinations</Link>
             </Button>
             {/* Public minibuses link if it's a generic info page */}
-             {/* <Button variant="ghost" asChild>
+            {/* <Button variant="ghost" asChild>
               <Link to="/minibuses">Minibuses</Link>
             </Button> */}
 
             {isAuthenticated ? (
               <>
-                {user?.role === 'user' && (
+                {user?.role === "user" && (
                   <Button variant="ghost" asChild>
                     {/* This route /my-bookings was created in a previous subtask */}
-                    <Link to="/my-bookings">My Bookings</Link> 
+                    <Link to="/my-bookings">My Bookings</Link>
                   </Button>
                 )}
-                {user?.role === 'admin' && (
+                {user?.role === "admin" && (
                   <Button variant="ghost" asChild>
                     <Link to="/admin/dashboard">Admin Dashboard</Link>
                   </Button>
@@ -74,7 +74,8 @@ const MainLayout: React.FC = () => {
         <Outlet /> {/* Child routes will render here */}
       </main>
       <footer className="bg-card border-t py-4 text-center text-muted-foreground text-sm">
-        © {new Date().getFullYear()} Minibus Booking Services. All rights reserved.
+        © {new Date().getFullYear()} Minibus Booking Services. All rights
+        reserved.
       </footer>
     </div>
   );

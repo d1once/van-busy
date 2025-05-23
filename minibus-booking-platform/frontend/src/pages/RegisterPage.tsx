@@ -1,13 +1,15 @@
 // minibus-booking-platform/frontend/src/pages/RegisterPage.tsx
-import React, { useState, FormEvent } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { registerUser, UserRegistrationData } from '../services/authService';
-import './AuthPages.css'; // Shared CSS for login/register pages
+import React, { useState } from "react";
+import type { FormEvent } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { registerUser } from "../services/authService";
+import type { UserRegistrationData } from "../services/authService";
+import "./AuthPages.css"; // Shared CSS for login/register pages
 
 const RegisterPage: React.FC = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState(''); // Assuming email is used for registration
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState(""); // Assuming email is used for registration
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -19,12 +21,12 @@ const RegisterPage: React.FC = () => {
     setSuccessMessage(null);
 
     if (!username || !email || !password) {
-      setError('All fields are required.');
+      setError("All fields are required.");
       return;
     }
     // Basic email validation
     if (!/\S+@\S+\.\S+/.test(email)) {
-      setError('Please enter a valid email address.');
+      setError("Please enter a valid email address.");
       return;
     }
 
@@ -33,13 +35,17 @@ const RegisterPage: React.FC = () => {
 
     try {
       const response = await registerUser(userData);
-      setSuccessMessage(response.message + ' You can now log in.');
+      setSuccessMessage(response.message + " You can now log in.");
       // Optionally redirect after a delay or let user click a link
       setTimeout(() => {
-        navigate('/login');
+        navigate("/login");
       }, 2000); // Redirect to login after 2 seconds
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Registration failed. Please try again.');
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Registration failed. Please try again."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -86,7 +92,7 @@ const RegisterPage: React.FC = () => {
             />
           </div>
           <button type="submit" className="auth-button" disabled={isLoading}>
-            {isLoading ? 'Registering...' : 'Register'}
+            {isLoading ? "Registering..." : "Register"}
           </button>
         </form>
         <p className="auth-link">

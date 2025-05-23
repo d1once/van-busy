@@ -1,4 +1,4 @@
-const Destination = require('../models/Destination');
+const Destination = require("../models/Destination");
 
 // @desc    Create a new destination
 // @route   POST /api/destinations
@@ -8,7 +8,9 @@ exports.createDestination = async (req, res) => {
     const { name, location, description, status, price, imageUrl } = req.body;
     // Basic validation for required fields
     if (!name || !location || !description || !price) {
-      return res.status(400).json({ message: 'Missing required fields: name, location, description, price' });
+      return res.status(400).json({
+        message: "Missing required fields: name, location, description, price",
+      });
     }
     const destination = new Destination({
       name,
@@ -22,10 +24,15 @@ exports.createDestination = async (req, res) => {
     res.status(201).json(createdDestination);
   } catch (error) {
     console.error(error.message);
-    if (error.code === 11000) { // Handle duplicate key error for 'name'
-        return res.status(400).json({ message: 'Destination name already exists' });
+    if (error.code === 11000) {
+      // Handle duplicate key error for 'name'
+      return res
+        .status(400)
+        .json({ message: "Destination name already exists" });
     }
-    res.status(500).json({ message: 'Server Error: Could not create destination' });
+    res
+      .status(500)
+      .json({ message: "Server Error: Could not create destination" });
   }
 };
 
@@ -33,14 +40,17 @@ exports.createDestination = async (req, res) => {
 // @route   GET /api/destinations/admin (or a protected GET /api/destinations)
 // @access  Admin
 // For public, a new route or filtering will be applied. Renaming for clarity for now.
-exports.getDestinations = async (req, res) => { // Renamed from getAllDestinations
+exports.getDestinations = async (req, res) => {
+  // Renamed from getAllDestinations
   try {
     // Admin gets all destinations, regardless of status
     const destinations = await Destination.find({});
     res.status(200).json(destinations);
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ message: 'Server Error: Could not retrieve destinations' });
+    res
+      .status(500)
+      .json({ message: "Server Error: Could not retrieve destinations" });
   }
 };
 
@@ -53,14 +63,18 @@ exports.getDestinationById = async (req, res) => {
     if (destination) {
       res.status(200).json(destination);
     } else {
-      res.status(404).json({ message: 'Destination not found' });
+      res.status(404).json({ message: "Destination not found" });
     }
   } catch (error) {
     console.error(error.message);
-    if (error.kind === 'ObjectId') {
-        return res.status(404).json({ message: 'Destination not found (invalid ID format)' });
+    if (error.kind === "ObjectId") {
+      return res
+        .status(404)
+        .json({ message: "Destination not found (invalid ID format)" });
     }
-    res.status(500).json({ message: 'Server Error: Could not retrieve destination' });
+    res
+      .status(500)
+      .json({ message: "Server Error: Could not retrieve destination" });
   }
 };
 
@@ -74,27 +88,36 @@ exports.updateDestination = async (req, res) => {
 
     if (destination) {
       destination.name = name !== undefined ? name : destination.name;
-      destination.location = location !== undefined ? location : destination.location;
-      destination.description = description !== undefined ? description : destination.description;
+      destination.location =
+        location !== undefined ? location : destination.location;
+      destination.description =
+        description !== undefined ? description : destination.description;
       destination.status = status !== undefined ? status : destination.status;
       destination.price = price !== undefined ? price : destination.price;
-      destination.imageUrl = imageUrl !== undefined ? imageUrl : destination.imageUrl; // Allow clearing imageUrl
-
+      destination.imageUrl =
+        imageUrl !== undefined ? imageUrl : destination.imageUrl; // Allow clearing imageUrl
 
       const updatedDestination = await destination.save();
       res.status(200).json(updatedDestination);
     } else {
-      res.status(404).json({ message: 'Destination not found' });
+      res.status(404).json({ message: "Destination not found" });
     }
   } catch (error) {
     console.error(error.message);
-    if (error.kind === 'ObjectId') {
-        return res.status(404).json({ message: 'Destination not found (invalid ID format)' });
+    if (error.kind === "ObjectId") {
+      return res
+        .status(404)
+        .json({ message: "Destination not found (invalid ID format)" });
     }
-    if (error.code === 11000) { // Handle duplicate key error for 'name'
-        return res.status(400).json({ message: 'Destination name already exists' });
+    if (error.code === 11000) {
+      // Handle duplicate key error for 'name'
+      return res
+        .status(400)
+        .json({ message: "Destination name already exists" });
     }
-    res.status(500).json({ message: 'Server Error: Could not update destination' });
+    res
+      .status(500)
+      .json({ message: "Server Error: Could not update destination" });
   }
 };
 
@@ -107,16 +130,20 @@ exports.deleteDestination = async (req, res) => {
 
     if (destination) {
       await destination.deleteOne();
-      res.status(200).json({ message: 'Destination removed successfully' });
+      res.status(200).json({ message: "Destination removed successfully" });
     } else {
-      res.status(404).json({ message: 'Destination not found' });
+      res.status(404).json({ message: "Destination not found" });
     }
   } catch (error) {
     console.error(error.message);
-    if (error.kind === 'ObjectId') {
-        return res.status(404).json({ message: 'Destination not found (invalid ID format)' });
+    if (error.kind === "ObjectId") {
+      return res
+        .status(404)
+        .json({ message: "Destination not found (invalid ID format)" });
     }
-    res.status(500).json({ message: 'Server Error: Could not delete destination' });
+    res
+      .status(500)
+      .json({ message: "Server Error: Could not delete destination" });
   }
 };
 
@@ -125,10 +152,28 @@ exports.deleteDestination = async (req, res) => {
 // @access  Public
 exports.getAvailableDestinations = async (req, res) => {
   try {
-    const destinations = await Destination.find({ status: 'available' });
+    console.log("Fetching available destinations...");
+    const destinations = await Destination.find({ status: "available" });
+    console.log("Found destinations:", JSON.stringify(destinations, null, 2));
+    console.log("Destinations type:", typeof destinations);
+    console.log("Is array?", Array.isArray(destinations));
+
+    if (!Array.isArray(destinations)) {
+      console.error("Destinations is not an array:", destinations);
+      return res.status(500).json({
+        message: "Server Error: Invalid data format",
+        error: "Destinations query did not return an array",
+      });
+    }
+
     res.status(200).json(destinations);
   } catch (error) {
-    console.error('Error fetching available destinations:', error.message);
-    res.status(500).json({ message: 'Server Error: Could not retrieve available destinations' });
+    console.error("Error fetching available destinations:", error);
+    console.error("Error stack:", error.stack);
+    res.status(500).json({
+      message: "Server Error: Could not retrieve available destinations",
+      error: error.message,
+      stack: error.stack,
+    });
   }
 };

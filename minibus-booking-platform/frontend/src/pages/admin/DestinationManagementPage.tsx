@@ -1,16 +1,18 @@
 // minibus-booking-platform/frontend/src/pages/admin/DestinationManagementPage.tsx
-import React, { useEffect, useState, useCallback } from 'react';
-import { 
-  getDestinations, 
-  createDestination, 
-  updateDestination, 
-  deleteDestination, 
+import React, { useEffect, useState, useCallback } from "react";
+import {
+  getDestinations,
+  createDestination,
+  updateDestination,
+  deleteDestination,
+} from "../../services/destinationService";
+import type {
   Destination,
   DestinationData,
-  DestinationUpdateData
-} from '../../services/destinationService';
-import DestinationFormModal from '../../components/admin/DestinationFormModal';
-import './DestinationManagementPage.css';
+  DestinationUpdateData,
+} from "../../services/destinationService";
+import DestinationFormModal from "../../components/admin/DestinationFormModal";
+import "./DestinationManagementPage.css";
 
 const DestinationManagementPage: React.FC = () => {
   const [destinations, setDestinations] = useState<Destination[]>([]);
@@ -20,7 +22,8 @@ const DestinationManagementPage: React.FC = () => {
   const [formError, setFormError] = useState<string | null>(null); // For form/modal errors
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [destinationToEdit, setDestinationToEdit] = useState<Destination | null>(null);
+  const [destinationToEdit, setDestinationToEdit] =
+    useState<Destination | null>(null);
 
   const fetchDestinations = useCallback(async () => {
     try {
@@ -30,7 +33,9 @@ const DestinationManagementPage: React.FC = () => {
       setError(null);
     } catch (err) {
       console.error("Error in fetchDestinations:", err);
-      setError(err instanceof Error ? err.message : 'Failed to fetch destinations');
+      setError(
+        err instanceof Error ? err.message : "Failed to fetch destinations"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -58,12 +63,17 @@ const DestinationManagementPage: React.FC = () => {
     setFormError(null);
   };
 
-  const handleSubmitDestination = async (data: DestinationData | DestinationUpdateData) => {
+  const handleSubmitDestination = async (
+    data: DestinationData | DestinationUpdateData
+  ) => {
     setIsSubmitting(true);
     setFormError(null);
     try {
       if (destinationToEdit) {
-        await updateDestination(destinationToEdit._id, data as DestinationUpdateData);
+        await updateDestination(
+          destinationToEdit._id,
+          data as DestinationUpdateData
+        );
       } else {
         await createDestination(data as DestinationData);
       }
@@ -71,21 +81,25 @@ const DestinationManagementPage: React.FC = () => {
       handleCloseModal();
     } catch (err) {
       console.error("Error submitting destination:", err);
-      setFormError(err instanceof Error ? err.message : 'Failed to save destination.');
+      setFormError(
+        err instanceof Error ? err.message : "Failed to save destination."
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleDeleteDestination = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this destination?')) {
+    if (window.confirm("Are you sure you want to delete this destination?")) {
       try {
         setIsLoading(true); // Indicate loading state for the table/page
         await deleteDestination(id);
         await fetchDestinations(); // Refresh list
       } catch (err) {
         console.error("Error deleting destination:", err);
-        setError(err instanceof Error ? err.message : 'Failed to delete destination.');
+        setError(
+          err instanceof Error ? err.message : "Failed to delete destination."
+        );
       } finally {
         setIsLoading(false);
       }
@@ -96,14 +110,18 @@ const DestinationManagementPage: React.FC = () => {
     <div className="destination-management-page">
       <header className="page-header">
         <h1>Destination Management</h1>
-        <button className="add-new-button" onClick={handleOpenModalForAdd}>Add New Destination</button>
+        <button className="add-new-button" onClick={handleOpenModalForAdd}>
+          Add New Destination
+        </button>
       </header>
 
       {isLoading && !destinations.length && <p>Loading destinations...</p>}
       {error && <p className="error-message page-error">{error}</p>}
-      
+
       {!isLoading && !error && destinations.length === 0 && (
-        <p>No destinations found. Click "Add New Destination" to get started.</p>
+        <p>
+          No destinations found. Click "Add New Destination" to get started.
+        </p>
       )}
 
       {!isLoading && !error && destinations.length > 0 && (
@@ -124,13 +142,25 @@ const DestinationManagementPage: React.FC = () => {
                 <td>{destination.location}</td>
                 <td>${destination.price.toFixed(2)}</td>
                 <td>
-                  <span className={`status-badge status-${destination.status.toLowerCase()}`}>
+                  <span
+                    className={`status-badge status-${destination.status.toLowerCase()}`}
+                  >
                     {destination.status}
                   </span>
                 </td>
                 <td>
-                  <button className="action-button edit-button" onClick={() => handleOpenModalForEdit(destination)}>Edit</button>
-                  <button className="action-button delete-button" onClick={() => handleDeleteDestination(destination._id)}>Delete</button>
+                  <button
+                    className="action-button edit-button"
+                    onClick={() => handleOpenModalForEdit(destination)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="action-button delete-button"
+                    onClick={() => handleDeleteDestination(destination._id)}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}

@@ -1,15 +1,24 @@
 // minibus-booking-platform/frontend/src/pages/admin/MinibusManagementPage.tsx
-import React, { useEffect, useState, useCallback } from 'react';
-import { getMinibuses, createMinibus, updateMinibus, deleteMinibus, MinibusData, MinibusUpdateData } from '../../services/minibusService';
-import MinibusFormModal from '../../components/admin/MinibusFormModal';
-import './MinibusManagementPage.css';
+import React, { useEffect, useState, useCallback } from "react";
+import {
+  getMinibuses,
+  createMinibus,
+  updateMinibus,
+  deleteMinibus,
+} from "../../services/minibusService";
+import type {
+  MinibusData,
+  MinibusUpdateData,
+} from "../../services/minibusService";
+import MinibusFormModal from "../../components/admin/MinibusFormModal";
+import "./MinibusManagementPage.css";
 
 interface Minibus {
   _id: string;
   name: string;
   capacity: number;
   licensePlate: string;
-  status: 'active' | 'maintenance' | 'out of service';
+  status: "active" | "maintenance" | "out of service";
   features?: string[];
   imageUrl?: string;
 }
@@ -32,7 +41,9 @@ const MinibusManagementPage: React.FC = () => {
       setError(null);
     } catch (err) {
       console.error("Error in fetchMinibuses:", err);
-      setError(err instanceof Error ? err.message : 'Failed to fetch minibuses');
+      setError(
+        err instanceof Error ? err.message : "Failed to fetch minibuses"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -75,14 +86,16 @@ const MinibusManagementPage: React.FC = () => {
       handleCloseModal();
     } catch (err) {
       console.error("Error submitting minibus:", err);
-      setFormError(err instanceof Error ? err.message : 'Failed to save minibus.');
+      setFormError(
+        err instanceof Error ? err.message : "Failed to save minibus."
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleDeleteMinibus = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this minibus?')) {
+    if (window.confirm("Are you sure you want to delete this minibus?")) {
       try {
         setIsLoading(true); // Indicate loading state for the table/page
         await deleteMinibus(id);
@@ -90,7 +103,9 @@ const MinibusManagementPage: React.FC = () => {
         await fetchMinibuses(); // Refresh list
       } catch (err) {
         console.error("Error deleting minibus:", err);
-        setError(err instanceof Error ? err.message : 'Failed to delete minibus.');
+        setError(
+          err instanceof Error ? err.message : "Failed to delete minibus."
+        );
       } finally {
         setIsLoading(false);
       }
@@ -101,12 +116,14 @@ const MinibusManagementPage: React.FC = () => {
     <div className="minibus-management-page">
       <header className="page-header">
         <h1>Minibus Management</h1>
-        <button className="add-new-button" onClick={handleOpenModalForAdd}>Add New Minibus</button>
+        <button className="add-new-button" onClick={handleOpenModalForAdd}>
+          Add New Minibus
+        </button>
       </header>
 
       {isLoading && !minibuses.length && <p>Loading minibuses...</p>}
       {error && <p className="error-message page-error">{error}</p>}
-      
+
       {!isLoading && !error && minibuses.length === 0 && (
         <p>No minibuses found. Click "Add New Minibus" to get started.</p>
       )}
@@ -129,13 +146,27 @@ const MinibusManagementPage: React.FC = () => {
                 <td>{minibus.licensePlate}</td>
                 <td>{minibus.capacity}</td>
                 <td>
-                  <span className={`status-badge status-${minibus.status.toLowerCase().replace(/\s+/g, '-')}`}>
+                  <span
+                    className={`status-badge status-${minibus.status
+                      .toLowerCase()
+                      .replace(/\s+/g, "-")}`}
+                  >
                     {minibus.status}
                   </span>
                 </td>
                 <td>
-                  <button className="action-button edit-button" onClick={() => handleOpenModalForEdit(minibus)}>Edit</button>
-                  <button className="action-button delete-button" onClick={() => handleDeleteMinibus(minibus._id)}>Delete</button>
+                  <button
+                    className="action-button edit-button"
+                    onClick={() => handleOpenModalForEdit(minibus)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="action-button delete-button"
+                    onClick={() => handleDeleteMinibus(minibus._id)}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
