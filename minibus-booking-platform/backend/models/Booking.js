@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const BookingSchema = new mongoose.Schema({
+  user: { // Added user reference
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
   destination: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Destination',
@@ -11,13 +16,13 @@ const BookingSchema = new mongoose.Schema({
     ref: 'Minibus',
     required: true,
   },
-  customerName: {
+  customerName: { // Made optional
     type: String,
-    required: true,
+    required: false, 
   },
-  customerEmail: {
+  customerEmail: { // Made optional
     type: String,
-    required: true,
+    required: false,
   },
   bookingDate: {
     type: Date,

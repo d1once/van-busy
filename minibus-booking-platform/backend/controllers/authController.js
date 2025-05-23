@@ -2,10 +2,10 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User'); // Adjust path as necessary
 
-// @desc    Login admin
+// @desc    Login user or admin
 // @route   POST /api/auth/login
 // @access  Public
-const loginAdmin = async (req, res) => {
+const login = async (req, res) => { // Renamed from loginAdmin
   const { username, password } = req.body;
 
   try {
@@ -16,11 +16,7 @@ const loginAdmin = async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials (user not found)' });
     }
 
-    // Check if user is an admin
-    if (!user.isAdmin) {
-      return res.status(403).json({ message: 'Not authorized, not an admin' });
-    }
-
+    // Password check is generic, role check removed from here
     // Check password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
@@ -30,7 +26,7 @@ const loginAdmin = async (req, res) => {
     // Create JWT
     const payload = {
       id: user._id,
-      isAdmin: user.isAdmin,
+      role: user.role,
     };
 
     jwt.sign(
@@ -44,7 +40,7 @@ const loginAdmin = async (req, res) => {
           user: {
             id: user._id,
             username: user.username,
-            isAdmin: user.isAdmin,
+            role: user.role,
           },
         });
       }
@@ -55,9 +51,50 @@ const loginAdmin = async (req, res) => {
   }
 };
 
-// @desc    Register a new admin (for initial setup)
+// @desc    Register a new user
 // @route   POST /api/auth/register
-// @access  Public (should be restricted after setup)
+// @access  Public
+const registerUser = async (req, res) => {
+  const { username, password } = req.body; // Explicitly ignore role from req.body
+
+  try {
+    // Check if user already exists
+    let user = await User.findOne({ username });
+    if (user) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
+
+    // Create new user with 'user' role
+    user = new User({
+      username,
+      password,
+      role: 'user', // Always set role to 'user'
+    });
+
+    // Hash password
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+
+    await user.save();
+
+    // Respond with success message (no token on registration for users)
+    res.status(201).json({
+      message: 'User registered successfully. Please login.',
+      user: {
+        id: user._id,
+        username: user.username,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server error during user registration');
+  }
+};
+
+// @desc    Register a new admin (for initial setup or by another admin)
+// @route   POST /api/auth/register-admin
+// @access  Restricted (e.g., to already authenticated admins)
 const registerAdmin = async (req, res) => {
   const { username, password } = req.body;
 
@@ -72,7 +109,7 @@ const registerAdmin = async (req, res) => {
     user = new User({
       username,
       password,
-      isAdmin: true, // Ensure this user is an admin
+      role: 'admin', // Explicitly set role to 'admin'
     });
 
     // Hash password
@@ -84,7 +121,7 @@ const registerAdmin = async (req, res) => {
     // Optionally: return a token directly upon registration
     const payload = {
       id: user._id,
-      isAdmin: user.isAdmin,
+      role: user.role,
     };
 
     jwt.sign(
@@ -94,23 +131,24 @@ const registerAdmin = async (req, res) => {
       (err, token) => {
         if (err) throw err;
         res.status(201).json({
-          message: 'Admin user registered successfully. Please login.',
+          message: 'Admin user registered successfully.',
           user: {
             id: user._id,
             username: user.username,
-            isAdmin: user.isAdmin,
+            role: user.role,
           },
-          // token: token // Uncomment if you want to return token on registration
+           token: token // Return token for admin registration
         });
       }
     );
   } catch (error) {
     console.error(error.message);
-    res.status(500).send('Server error during registration');
+    res.status(500).send('Server error during admin registration');
   }
 };
 
 module.exports = {
-  loginAdmin,
+  login, // Export generalized login
+  registerUser,
   registerAdmin,
 };

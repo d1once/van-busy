@@ -1,0 +1,126 @@
+/* minibus-booking-platform/frontend/src/components/admin/MinibusFormModal.css */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it's on top */
+}
+
+.modal-content {
+  background-color: white;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 500px; /* Max width for the modal */
+  max-height: 90vh; /* Max height */
+  overflow-y: auto; /* Scroll if content is too long */
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.5em;
+  color: #333;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Ensures padding doesn't add to width */
+  font-size: 1em;
+}
+
+.form-group input[type="number"] {
+  /* Specific styling for number input if needed */
+}
+
+.form-group select {
+  cursor: pointer;
+}
+
+.form-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end; /* Align buttons to the right */
+  gap: 10px; /* Space between buttons */
+}
+
+.form-actions button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button {
+  background-color: #007bff; /* Blue for submit */
+  color: white;
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+}
+
+.submit-button:disabled {
+  background-color: #a0cfff; /* Lighter blue when disabled */
+  cursor: not-allowed;
+}
+
+.cancel-button {
+  background-color: #6c757d; /* Grey for cancel */
+  color: white;
+}
+
+.cancel-button:hover {
+  background-color: #545b62;
+}
+
+.cancel-button:disabled {
+  background-color: #b0b4b8;
+  cursor: not-allowed;
+}
+
+.error-message { /* General error message styling */
+  color: #D8000C; /* Red for errors */
+  background-color: #FFD2D2; /* Light red background */
+  border: 1px solid #D8000C;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  font-size: 0.9em;
+  text-align: center;
+}
+
+.form-error { /* Specific for form validation errors within the modal */
+   margin-bottom: 10px;
+}
+
+.submission-error { /* Specific for API submission errors */
+  margin-top: 10px;
+  margin-bottom: 0; /* If it's the last element before form groups */
+}

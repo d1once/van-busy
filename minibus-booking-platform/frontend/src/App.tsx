@@ -1,49 +1,68 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'; // Added Navigate
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
-import AdminLayout from '@/components/layout/AdminLayout'; // Import AdminLayout
+import AdminLayout from '@/components/admin/AdminLayout'; // Updated AdminLayout path
 import HomePage from '@/pages/HomePage';
 import DestinationsPage from '@/pages/DestinationsPage';
 import MinibusesPage from '@/pages/MinibusesPage';
 import BookingPage from '@/pages/BookingPage';
 import AdminLoginPage from '@/pages/AdminLoginPage';
 import NotFoundPage from '@/pages/NotFoundPage';
-import { initializeAuthHeader } from '@/services/authService'; // Import
+import { initializeAuthHeader } from '@/services/authService';
+import AdminProtectedRoute from '@/components/auth/AdminProtectedRoute';
+import UserProtectedRoute from '@/components/auth/UserProtectedRoute'; // Import UserProtectedRoute
+
+// Import actual admin pages
+import AdminDashboardPage from '@/pages/admin/AdminDashboardPage';
+import MinibusManagementPage from '@/pages/admin/MinibusManagementPage';
+import DestinationManagementPage from '@/pages/admin/DestinationManagementPage';
+import BookingManagementPage from '@/pages/admin/BookingManagementPage';
+import RegisterPage from '@/pages/RegisterPage';
+import LoginPage from '@/pages/LoginPage';
+import UserBookingsPage from '@/pages/UserBookingsPage'; // Import UserBookingsPage
 
 // Initialize Auth Header on App Load
 initializeAuthHeader();
-
-// Placeholder Admin Pages (can be moved to src/pages/admin/ later)
-const AdminDashboardPage = () => <div className="p-4"><h1 className="text-xl font-bold">Admin Dashboard</h1><p>Content TBD</p></div>;
-const AdminManageMinibusesPage = () => <div className="p-4"><h1 className="text-xl font-bold">Manage Minibuses</h1><p>Content TBD</p></div>;
-const AdminManageDestinationsPage = () => <div className="p-4"><h1 className="text-xl font-bold">Manage Destinations</h1><p>Content TBD</p></div>;
-const AdminManageBookingsPage = () => <div className="p-4"><h1 className="text-xl font-bold">Manage Bookings</h1><p>Content TBD</p></div>;
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public Routes */}
+        {/* Public Routes & User Auth Routes */}
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        
         <Route path="/" element={<MainLayout />}>
           <Route index element={<HomePage />} />
           <Route path="destinations" element={<DestinationsPage />} />
           <Route path="minibuses" element={<MinibusesPage />} />
           <Route path="book" element={<BookingPage />} />
-          {/* Keep AdminLoginPage accessible outside AdminLayout for initial login - handled below */}
+          {/* Protected route for user's bookings */}
+          <Route path="my-bookings" element={
+            <UserProtectedRoute>
+              <UserBookingsPage />
+            </UserProtectedRoute>
+          } />
         </Route>
 
-        {/* Admin Login Page (Separate from AdminLayout to avoid recursive redirect) */}
-        {/* This route is defined to be outside the MainLayout styling for login page */}
+        {/* Admin Login Page (Separate from AdminLayout and MainLayout) */}
         <Route path="/admin/login" element={<AdminLoginPage />} />
 
         {/* Protected Admin Routes */}
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route path="dashboard" element={<AdminDashboardPage />} />
-          <Route path="minibuses" element={<AdminManageMinibusesPage />} />
-          <Route path="destinations" element={<AdminManageDestinationsPage />} />
-          <Route path="bookings" element={<AdminManageBookingsPage />} />
-          {/* Redirect to dashboard if /admin is hit directly or any other sub-route not matched */}
-          <Route index element={<Navigate to="/admin/dashboard" replace />} />
-          <Route path="*" element={<Navigate to="/admin/dashboard" replace />} /> {/* Catch-all for /admin/* */}
+        <Route element={<AdminProtectedRoute />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route path="dashboard" element={<AdminDashboardPage />} />
+            <Route path="minibuses" element={<MinibusManagementPage />} />
+            <Route path="destinations" element={<DestinationManagementPage />} />
+            <Route path="bookings" element={<BookingManagementPage />} />
+            {/* Redirect to dashboard if /admin is hit directly */}
+            <Route index element={<Navigate to="/admin/dashboard" replace />} />
+             {/* Optional: A more specific catch-all for /admin sub-routes not found,
+                 if AdminLayout should render a 404 page within its structure.
+                 Otherwise, the global catch-all will handle it.
+                 For now, let's assume if /admin/nonexistent is hit, it should redirect to /admin/dashboard.
+            */}
+            <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
+          </Route>
         </Route>
 
         {/* Not Found Route - ensure it's structured to show within MainLayout or a specific 404 layout */}

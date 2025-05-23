@@ -1,0 +1,113 @@
+/* minibus-booking-platform/frontend/src/pages/admin/MinibusManagementPage.css */
+.minibus-management-page {
+  padding: 20px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 1.8em;
+}
+
+.add-new-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+.add-new-button:hover {
+  background-color: #0056b3;
+}
+
+.error-message {
+  color: #dc3545; /* Red for errors */
+  background-color: #f8d7da; /* Light red background */
+  border: 1px solid #f5c6cb; /* Reddish border */
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.minibuses-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.minibuses-table th,
+.minibuses-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+.minibuses-table th {
+  background-color: #f8f9fa; /* Light grey for header */
+  font-weight: bold;
+}
+
+.minibuses-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2; /* Zebra striping for rows */
+}
+
+.minibuses-table tbody tr:hover {
+  background-color: #e9ecef; /* Lighter grey on hover */
+}
+
+.action-button {
+  padding: 6px 10px;
+  margin-right: 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.edit-button {
+  background-color: #ffc107; /* Yellow for edit */
+  color: #333;
+}
+
+.edit-button:hover {
+  background-color: #e0a800;
+}
+
+.delete-button {
+  background-color: #dc3545; /* Red for delete */
+  color: white;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+}
+
+.status-badge {
+  padding: 5px 8px;
+  border-radius: 12px; /* Pill shape */
+  font-size: 0.85em;
+  color: white;
+  text-transform: capitalize;
+}
+
+.status-active {
+  background-color: #28a745; /* Green for active */
+}
+
+.status-maintenance {
+  background-color: #fd7e14; /* Orange for maintenance */
+}
+
+.status-out-of-service {
+  background-color: #6c757d; /* Grey for out of service */
+}

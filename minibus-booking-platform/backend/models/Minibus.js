@@ -9,6 +9,16 @@ const MinibusSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  licensePlate: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  status: {
+    type: String,
+    enum: ['active', 'maintenance', 'out of service'],
+    default: 'active',
+  },
   features: [{
     type: String,
   }],

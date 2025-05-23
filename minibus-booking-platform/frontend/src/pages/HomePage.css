@@ -1,0 +1,122 @@
+/* minibus-booking-platform/frontend/src/pages/HomePage.css */
+.homepage-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto; /* Center the content */
+}
+
+.homepage-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.homepage-header h1 {
+  font-size: 2.5em;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.homepage-header p {
+  font-size: 1.2em;
+  color: #666;
+}
+
+.destinations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
+  gap: 20px;
+}
+
+.destination-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden; /* Ensures image corners are rounded if image itself isn't */
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.destination-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.destination-image {
+  width: 100%;
+  height: 200px; /* Fixed height for images */
+  object-fit: cover; /* Cover the area, cropping if necessary */
+}
+
+.destination-info {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Allows button to be at the bottom */
+}
+
+.destination-info h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 1.6em;
+  color: #333;
+}
+
+.destination-location {
+  font-size: 0.9em;
+  color: #777;
+  margin-bottom: 10px;
+}
+
+.destination-description {
+  font-size: 1em;
+  color: #555;
+  margin-bottom: 12px;
+  flex-grow: 1; /* Pushes price and button down if description is short */
+  line-height: 1.4;
+}
+
+.destination-price {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #007bff; /* Blue price */
+  margin-bottom: 15px;
+  text-align: right;
+}
+
+.book-now-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none; /* For Link component if used */
+  font-size: 1em;
+  transition: background-color 0.3s ease;
+  margin-top: auto; /* Pushes button to the bottom of the card */
+}
+
+.book-now-button:hover {
+  background-color: #0056b3;
+}
+
+.loading-message,
+.no-destinations-message {
+  text-align: center;
+  font-size: 1.2em;
+  padding: 30px;
+  color: #555;
+}
+
+.error-message.page-error { /* Ensure page-level errors are also styled if not already */
+  color: #D8000C;
+  background-color: #FFD2D2;
+  border: 1px solid #D8000C;
+  padding: 15px;
+  border-radius: 5px;
+  text-align: center;
+  margin: 20px;
+}

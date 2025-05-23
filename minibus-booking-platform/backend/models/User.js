@@ -10,9 +10,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  isAdmin: {
-    type: Boolean,
-    default: true, // For simplicity, all users are admins initially
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user',
   },
 });
 

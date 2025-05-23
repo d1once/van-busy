@@ -1,0 +1,49 @@
+/* minibus-booking-platform/frontend/src/components/admin/AdminLayout.css */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.admin-sidebar {
+  width: 250px;
+  background-color: #f0f0f0; /* Light grey background */
+  padding: 20px;
+  border-right: 1px solid #ddd; /* Separator line */
+}
+
+.admin-sidebar h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.admin-sidebar nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.admin-sidebar nav ul li {
+  margin-bottom: 10px;
+}
+
+.admin-sidebar nav ul li a {
+  text-decoration: none;
+  color: #333; /* Dark grey text */
+  display: block;
+  padding: 8px 15px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.admin-sidebar nav ul li a:hover,
+.admin-sidebar nav ul li a.active { /* Style for active link */
+  background-color: #007bff; /* Blue background for hover/active */
+  color: white;
+}
+
+.admin-content {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #fff; /* White background for content area */
+}

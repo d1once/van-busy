@@ -56,14 +56,18 @@ const seedAdminUser = async () => {
   }
 };
 
-// Connect DB and Start Server
-connectDB().then(() => {
-  seedAdminUser().then(() => { // Seed admin user after DB connection
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
+// Connect DB and Start Server only if not in test environment
+if (process.env.NODE_ENV !== 'test') {
+  connectDB().then(() => {
+    seedAdminUser().then(() => { // Seed admin user after DB connection
+      app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+      });
     });
+  }).catch(err => {
+      console.error("Failed to connect to DB or seed admin user", err);
+      process.exit(1);
   });
-}).catch(err => {
-    console.error("Failed to connect to DB or seed admin user", err);
-    process.exit(1);
-});
+}
+
+module.exports = app; // Export the app for testing

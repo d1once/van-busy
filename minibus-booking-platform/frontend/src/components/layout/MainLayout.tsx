@@ -1,8 +1,17 @@
 import React from 'react';
-import { Outlet, Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button'; // Using existing button
+import { Outlet, Link, useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '../../contexts/AuthContext'; // Import useAuth
 
 const Navbar: React.FC = () => {
+  const { isAuthenticated, user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/'); // Redirect to homepage after logout
+  };
+
   return (
     <nav className="bg-card shadow-sm">
       <div className="container mx-auto px-4">
@@ -14,15 +23,42 @@ const Navbar: React.FC = () => {
             <Button variant="ghost" asChild>
               <Link to="/">Home</Link>
             </Button>
+            {/* Public destinations link still makes sense */}
             <Button variant="ghost" asChild>
-              <Link to="/destinations">Destinations</Link>
+              <Link to="/destinations">Destinations</Link> 
             </Button>
-            <Button variant="ghost" asChild>
+            {/* Public minibuses link if it's a generic info page */}
+             {/* <Button variant="ghost" asChild>
               <Link to="/minibuses">Minibuses</Link>
-            </Button>
-            <Button variant="outline" asChild>
-              <Link to="/admin/login">Admin Login</Link>
-            </Button>
+            </Button> */}
+
+            {isAuthenticated ? (
+              <>
+                {user?.role === 'user' && (
+                  <Button variant="ghost" asChild>
+                    {/* This route /my-bookings was created in a previous subtask */}
+                    <Link to="/my-bookings">My Bookings</Link> 
+                  </Button>
+                )}
+                {user?.role === 'admin' && (
+                  <Button variant="ghost" asChild>
+                    <Link to="/admin/dashboard">Admin Dashboard</Link>
+                  </Button>
+                )}
+                <Button variant="outline" onClick={handleLogout}>
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="ghost" asChild>
+                  <Link to="/login">Login</Link>
+                </Button>
+                <Button variant="outline" asChild>
+                  <Link to="/register">Register</Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </div>

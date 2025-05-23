@@ -1,0 +1,104 @@
+/* minibus-booking-platform/frontend/src/pages/admin/BookingManagementPage.css */
+.booking-management-page {
+  padding: 20px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 1.8em;
+}
+
+.error-message {
+  color: #dc3545; /* Red for errors */
+  background-color: #f8d7da; /* Light red background */
+  border: 1px solid #f5c6cb; /* Reddish border */
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.bookings-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.bookings-table th,
+.bookings-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+  vertical-align: top; /* Align content to the top for cells with multiple lines */
+}
+
+.bookings-table th {
+  background-color: #f8f9fa; /* Light grey for header */
+  font-weight: bold;
+}
+
+.bookings-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2; /* Zebra striping for rows */
+}
+
+.bookings-table tbody tr:hover {
+  background-color: #e9ecef; /* Lighter grey on hover */
+}
+
+.bookings-table small {
+  display: block;
+  font-size: 0.85em;
+  color: #6c757d; /* Grey for sub-text like email or license plate */
+}
+
+.action-button {
+  padding: 6px 10px;
+  margin-right: 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.cancel-button {
+  background-color: #dc3545; /* Red for cancel */
+  color: white;
+}
+
+.cancel-button:hover {
+  background-color: #c82333;
+}
+
+.cancel-button:disabled {
+  background-color: #e0848d; /* Lighter red when disabled */
+  cursor: not-allowed;
+}
+
+.status-badge {
+  padding: 5px 8px;
+  border-radius: 12px; /* Pill shape */
+  font-size: 0.85em;
+  color: white;
+  text-transform: capitalize;
+  display: inline-block; /* Ensure badge respects padding */
+}
+
+.status-pending {
+  background-color: #ffc107; /* Yellow for pending */
+  color: #333;
+}
+
+.status-confirmed {
+  background-color: #28a745; /* Green for confirmed */
+}
+
+.status-cancelled {
+  background-color: #6c757d; /* Grey for cancelled */
+}

@@ -2,13 +2,19 @@ const Minibus = require('../models/Minibus');
 
 // @desc    Create a new minibus
 // @route   POST /api/minibuses
-// @access  Private (to be implemented later)
+// @access  Admin
 exports.createMinibus = async (req, res) => {
   try {
-    const { name, capacity, features, imageUrl } = req.body;
+    const { name, capacity, licensePlate, status, features, imageUrl } = req.body;
+    // Basic validation for required fields
+    if (!name || !capacity || !licensePlate) {
+      return res.status(400).json({ message: 'Missing required fields: name, capacity, licensePlate' });
+    }
     const minibus = new Minibus({
       name,
       capacity,
+      licensePlate,
+      status, // Will default to 'active' if not provided, as per schema
       features,
       imageUrl,
     });
@@ -22,8 +28,8 @@ exports.createMinibus = async (req, res) => {
 
 // @desc    Get all minibuses
 // @route   GET /api/minibuses
-// @access  Public
-exports.getAllMinibuses = async (req, res) => {
+// @access  Admin
+exports.getMinibuses = async (req, res) => { // Renamed from getAllMinibuses
   try {
     const minibuses = await Minibus.find({});
     res.status(200).json(minibuses);
@@ -35,7 +41,7 @@ exports.getAllMinibuses = async (req, res) => {
 
 // @desc    Get a minibus by ID
 // @route   GET /api/minibuses/:id
-// @access  Public
+// @access  Admin
 exports.getMinibusById = async (req, res) => {
   try {
     const minibus = await Minibus.findById(req.params.id);
@@ -55,17 +61,19 @@ exports.getMinibusById = async (req, res) => {
 
 // @desc    Update a minibus by ID
 // @route   PUT /api/minibuses/:id
-// @access  Private (to be implemented later)
+// @access  Admin
 exports.updateMinibus = async (req, res) => {
   try {
-    const { name, capacity, features, imageUrl } = req.body;
+    const { name, capacity, licensePlate, status, features, imageUrl } = req.body;
     const minibus = await Minibus.findById(req.params.id);
 
     if (minibus) {
-      minibus.name = name || minibus.name;
-      minibus.capacity = capacity || minibus.capacity;
-      minibus.features = features || minibus.features;
-      minibus.imageUrl = imageUrl || minibus.imageUrl;
+      minibus.name = name !== undefined ? name : minibus.name;
+      minibus.capacity = capacity !== undefined ? capacity : minibus.capacity;
+      minibus.licensePlate = licensePlate !== undefined ? licensePlate : minibus.licensePlate;
+      minibus.status = status !== undefined ? status : minibus.status;
+      minibus.features = features !== undefined ? features : minibus.features;
+      minibus.imageUrl = imageUrl !== undefined ? imageUrl : minibus.imageUrl; // Allow clearing imageUrl
 
       const updatedMinibus = await minibus.save();
       res.status(200).json(updatedMinibus);
@@ -83,14 +91,14 @@ exports.updateMinibus = async (req, res) => {
 
 // @desc    Delete a minibus by ID
 // @route   DELETE /api/minibuses/:id
-// @access  Private (to be implemented later)
+// @access  Admin
 exports.deleteMinibus = async (req, res) => {
   try {
     const minibus = await Minibus.findById(req.params.id);
 
     if (minibus) {
-      await minibus.deleteOne(); // or minibus.remove() for older Mongoose versions
-      res.status(200).json({ message: 'Minibus removed' });
+      await minibus.deleteOne();
+      res.status(200).json({ message: 'Minibus removed successfully' });
     } else {
       res.status(404).json({ message: 'Minibus not found' });
     }

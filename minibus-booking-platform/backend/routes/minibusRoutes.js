@@ -2,26 +2,38 @@ const express = require('express');
 const router = express.Router();
 const {
   createMinibus,
-  getAllMinibuses,
+  getMinibuses, // Renamed from getAllMinibuses
   getMinibusById,
   updateMinibus,
   deleteMinibus,
 } = require('../controllers/minibusController');
-const { protectAdmin } = require('../middleware/authMiddleware');
+const { protect, isAdmin } = require('../middleware/authMiddleware'); // Updated middleware
+
+// All routes below are protected and require admin privileges
 
 // @route   POST /api/minibuses
-router.post('/', protectAdmin, createMinibus);
+// @desc    Create a new minibus
+// @access  Admin
+router.post('/', protect, isAdmin, createMinibus);
 
 // @route   GET /api/minibuses
-router.get('/', getAllMinibuses);
+// @desc    Get all minibuses
+// @access  Admin
+router.get('/', protect, isAdmin, getMinibuses); // Was getAllMinibuses, now protected
 
 // @route   GET /api/minibuses/:id
-router.get('/:id', getMinibusById);
+// @desc    Get a single minibus by ID
+// @access  Admin
+router.get('/:id', protect, isAdmin, getMinibusById); // Now protected
 
 // @route   PUT /api/minibuses/:id
-router.put('/:id', protectAdmin, updateMinibus);
+// @desc    Update a minibus
+// @access  Admin
+router.put('/:id', protect, isAdmin, updateMinibus); // Was protectAdmin
 
 // @route   DELETE /api/minibuses/:id
-router.delete('/:id', protectAdmin, deleteMinibus);
+// @desc    Delete a minibus
+// @access  Admin
+router.delete('/:id', protect, isAdmin, deleteMinibus); // Was protectAdmin
 
 module.exports = router;
